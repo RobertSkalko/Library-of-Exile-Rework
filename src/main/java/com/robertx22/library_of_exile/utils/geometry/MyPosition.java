@@ -24,15 +24,12 @@ public class MyPosition extends Vec3 {
     }
 
     public MyPosition(BlockPos pos) {
-        super(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
-    }
-
-    public MyPosition(BlockPos pos, boolean dontAddMiddle) {
         super(pos.getX(), pos.getY(), pos.getZ());
     }
 
+
     public BlockPos asBlockPos() {
-        return new BlockPos((int) x, (int) y, (int) z);
+        return BlockPos.containing(this);
     }
 
     public Vec3 asVec3D() {
