@@ -1,17 +1,23 @@
 package com.robertx22.library_of_exile.dimension.structure.dungeon;
 
 import com.robertx22.library_of_exile.dimension.structure.MapStructure;
+import com.robertx22.library_of_exile.events.base.ExileEvents;
 import com.robertx22.library_of_exile.main.ExileLog;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+
+import java.util.List;
 
 public class DungeonRoomPlacer {
 
@@ -22,6 +28,30 @@ public class DungeonRoomPlacer {
         StructurePlaceSettings settings = new StructurePlaceSettings().setMirror(Mirror.NONE)
                 .setRotation(rota)
                 .setIgnoreEntities(false);
+        List<StructureTemplate.StructureBlockInfo> commandBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.COMMAND_BLOCK, true);
+        List<StructureTemplate.StructureBlockInfo> chainCommandBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.CHAIN_COMMAND_BLOCK, true);
+        List<StructureTemplate.StructureBlockInfo> repeatingCommandBlocks = template.filterBlocks(BlockPos.ZERO, new StructurePlaceSettings(), Blocks.REPEATING_COMMAND_BLOCK, true);
+
+        final BlockPos finalPosition = position;
+
+        commandBlocks
+        .forEach((block) -> {
+            ExileLog.get().log("Found dungeon command block: " + block.toString());
+            BlockPos worldPos = finalPosition.offset(block.pos());
+
+            var event = new ExileEvents.DungeonCommandBlockPlaced(world, worldPos, block, id);
+            ExileEvents.DUNGEON_COMMAND_BLOCK_PLACED.callEvents(event);
+        });
+
+        chainCommandBlocks
+        .forEach((block) -> {
+            ExileLog.get().log("Found dungeon command block: " + block.toString());
+        });
+
+        repeatingCommandBlocks
+        .forEach((block) -> {
+            ExileLog.get().log("Found dungeon command block: " + block.toString());
+        });
 
         settings.setBoundingBox(settings.getBoundingBox());
 
