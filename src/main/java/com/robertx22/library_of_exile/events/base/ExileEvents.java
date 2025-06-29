@@ -11,6 +11,8 @@ import com.robertx22.library_of_exile.registry.ExileRegistryEvent;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,7 +21,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.storage.loot.LootParams;
 
 import java.util.ArrayList;
@@ -52,6 +57,7 @@ public class ExileEvents {
     public static ExileEventCaller<OnProcessMapDataBlock> PROCESS_DATA_BLOCK = new ExileEventCaller<>();
     public static ExileEventCaller<OnProcessChunkData> PROCESS_CHUNK_DATA = new ExileEventCaller<>();
     public static ExileEventCaller<GrabLibMapData> GRAB_LIB_MAP_DATA = new ExileEventCaller<>();
+    public static ExileEventCaller<DungeonCommandBlockPlaced> DUNGEON_COMMAND_BLOCK_PLACED = new ExileEventCaller<>();
 
     // todo maybe i can add adapters to this and save stuff like registry strings into wrapper classes??
 
@@ -78,6 +84,20 @@ public class ExileEvents {
             b.registerTypeAdapter(ada.getClass(), ada);
         }
 
+    }
+
+    public static class DungeonCommandBlockPlaced extends ExileEvent {
+        public LevelAccessor world;
+        public BlockPos pos;
+        public StructureTemplate.StructureBlockInfo blockInfo;
+        public ResourceLocation structureId;
+
+        public DungeonCommandBlockPlaced(LevelAccessor world, BlockPos pos, StructureTemplate.StructureBlockInfo blockInfo, ResourceLocation structureId) {
+            this.world = world;
+            this.pos = pos;
+            this.blockInfo = blockInfo;
+            this.structureId = structureId;
+        }
     }
 
 
