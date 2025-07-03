@@ -11,6 +11,7 @@ import com.robertx22.library_of_exile.registry.ExileRegistryEvent;
 import com.robertx22.library_of_exile.registry.ExileRegistryType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,7 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.storage.loot.LootParams;
 
 import java.util.ArrayList;
@@ -52,6 +55,7 @@ public class ExileEvents {
     public static ExileEventCaller<OnProcessMapDataBlock> PROCESS_DATA_BLOCK = new ExileEventCaller<>();
     public static ExileEventCaller<OnProcessChunkData> PROCESS_CHUNK_DATA = new ExileEventCaller<>();
     public static ExileEventCaller<GrabLibMapData> GRAB_LIB_MAP_DATA = new ExileEventCaller<>();
+    public static ExileEventCaller<DungeonDataBlockPlaced> DUNGEON_DATA_BLOCK_PLACED = new ExileEventCaller<>();
 
     // todo maybe i can add adapters to this and save stuff like registry strings into wrapper classes??
 
@@ -80,6 +84,19 @@ public class ExileEvents {
 
     }
 
+    public static class DungeonDataBlockPlaced extends ExileEvent {
+        public LevelAccessor levelAccessor;
+        public BlockPos pos;
+        public StructureTemplate.StructureBlockInfo blockInfo;
+        public ResourceLocation structureId;
+
+        public DungeonDataBlockPlaced(LevelAccessor levelAccessor, BlockPos pos, StructureTemplate.StructureBlockInfo blockInfo, ResourceLocation structureId) {
+            this.levelAccessor = levelAccessor;
+            this.pos = pos;
+            this.blockInfo = blockInfo;
+            this.structureId = structureId;
+        }
+    }
 
     public static class GrabLibMapData extends ExileEvent {
         public Level level;
